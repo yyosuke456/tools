@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Convert table type from odt to markdown</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<form>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="from-odt">ODT</label>
+          <textarea class="form-control" id="original" rows="11"></textarea>
+        </div>
+        <label for="column-count"> Column Count: </label>
+        <input type="number" id="column-count" value="2">
+        <button type="button" class="btn btn-primary" id="convert-to-md">Convert to MD</button>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="to-md">MD</label>
+          <textarea class="form-control" id="result" rows="11"></textarea>
+        </div>
+      </div>
+    </div>
+    <br>
+    <hr>
+  </div>
+</form>
+
+<script>
+  $('#convert-to-md').click(function() {
+    const existData = $('#result').val();
+    const original = $('#original').val();
+    let originalList = original.split("\n");
+    const columnCount = $('#column-count').val();
+    let resultTableList = sliceByNumber(originalList, columnCount);
+    const separatorArray = Array(Number(columnCount)).fill('------');
+
+    resultTableList.splice(1, 0, separatorArray);
+    const result = resultTableList.map(function(element, index, array) {return "| " + element.join(" | ") + " |";}).join("\n");
+    $('#result').text(result);
+  });
+  
+  $('#clear').click(function() {
+     $('#result').text("");
+  });
+
+  // http://yucatio.hatenablog.com/entry/2019/12/10/222311
+  const sliceByNumber = (array, number) => {
+    const length = Math.ceil(array.length / number)
+    return new Array(length).fill().map((_, i) =>
+      array.slice(i * number, (i + 1) * number)
+  )
+}
+</script>
+
+</body>
+</html>
